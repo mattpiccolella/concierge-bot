@@ -1,9 +1,12 @@
+var constants = require('../config/constants.js');
+var request = require('request');
+
 var utils = module.exports = {};
 
 function makeRequest(url, sender, method, messageData, callback) {
   request({
     url: url,
-    qs: { access_token : PAGE_TOKEN },
+    qs: { access_token : constants.PAGE_TOKEN },
     method: 'POST',
     json: {
       recipient: { id : sender },
@@ -23,6 +26,11 @@ function defaultErrorHandler(error, response, body) {
 utils.defaultErrorHandler = defaultErrorHandler;
 
 function sendMessage(sender, messageData) {
-  makeRequest(BASE_URL, sender, 'POST', messageData, defaultErrorHandler);
+  makeRequest(constants.BASE_URL, sender, 'POST', messageData, defaultErrorHandler);
 }
 utils.sendMessage = sendMessage;
+
+function test() {
+  return constants.PAGE_TOKEN;
+}
+utils.test = test;

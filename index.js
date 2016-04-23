@@ -2,18 +2,19 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 var utils = require('./utils/base.js');
+var constants = require('./config/constants.js');
 var app = express();
 
-var VERIFY_TOKEN = 'AYVO6O4wey7NFD5';
-var PAGE_TOKEN = 'CAAXZCBiQkd4YBALZBk4wqOZAXoPjjatHH1xzed05ZAQA0PRCNjKIflyzRDsmgv2ZCsas5VPyd6GKxBvalaig8NsTyEnMxTpNPcFUPXHiOdygC05vZANOsIUQn2bMJ3qbgjv0g3uEyipyzC0xLKWpbUJ78p01wzVzXkxmEDY30cZC186dLDsMxJc75ZCZANDwQlrIZD';
-var BASE_URL = 'https://graph.facebook.com/v2.6/me/messages';
+var VERIFY_TOKEN = constants.VERIFY_TOKEN;
+var PAGE_TOKEN = constants.PAGE_TOKEN;
+var BASE_URL = constants.BASE_URL;
 
 app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-	res.send('Welcome to Concierge Bot!');
+	res.send(VERIFY_TOKEN);
 });
 
 // Verify Facebook webhook. Only run once.
