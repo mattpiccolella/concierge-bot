@@ -4,6 +4,7 @@ var request = require('request');
 var app = express();
 
 var VERIFY_TOKEN = 'AYVO6O4wey7NFD5';
+var PAGE_TOKEN = 'CAAXZCBiQkd4YBALZBk4wqOZAXoPjjatHH1xzed05ZAQA0PRCNjKIflyzRDsmgv2ZCsas5VPyd6GKxBvalaig8NsTyEnMxTpNPcFUPXHiOdygC05vZANOsIUQn2bMJ3qbgjv0g3uEyipyzC0xLKWpbUJ78p01wzVzXkxmEDY30cZC186dLDsMxJc75ZCZANDwQlrIZD';
 
 app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -37,14 +38,12 @@ app.post('/webhook/', function (req, res) {
 		}
 		if (event.postback) {
 			text = JSON.stringify(event.postback)
-			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), PAGE_TOKEN)
 			continue
 		}
 	}
 	res.sendStatus(200)
 });
-
-var token = ""
 
 function sendTextMessage(sender, text) {
 	messageData = {
@@ -52,7 +51,7 @@ function sendTextMessage(sender, text) {
 	}
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
-		qs: {access_token:token},
+		qs: { access_token : PAGE_TOKEN },
 		method: 'POST',
 		json: {
 			recipient: {id:sender},
@@ -101,7 +100,7 @@ function sendGenericMessage(sender) {
 	}
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
-		qs: {access_token:token},
+		qs: { access_token: PAGE_TOKEN},
 		method: 'POST',
 		json: {
 			recipient: {id:sender},
