@@ -5,6 +5,18 @@ var constants = require('../config/constants.js');
 var wit = module.exports = {};
 const sessions = {};
 
+const firstEntityValue = (entities, entity) => {
+  const val = entities && entities[entity] &&
+    Array.isArray(entities[entity]) &&
+    entities[entity].length > 0 &&
+    entities[entity][0].value
+  ;
+  if (!val) {
+    return null;
+  }
+  return typeof val === 'object' ? val.value : val;
+};
+
 // Our bot actions
 const actions = {
   say(sessionId, context, message, callback) {
@@ -19,11 +31,31 @@ const actions = {
     }
   },
   merge(sessionId, context, entities, message, callback) {
+    var search = firstEntityValue(entities, 'local_search_query');
+    var loc = firstEntityValue(entities, 'location');
+    if (search && loc) {
+      context.search = search;
+      context.loc = loc;
+    }
     callback(context);
   },
   error(sessionId, context, error) {
+    console.log(error);
     console.log('Here we go!');
     console.log(error.message);
+  },
+  ['findPlaces'](sessionId, context, callback) {
+    var searchTerm = context.search;
+    var locationTerm = context.loc;
+
+    var sender = sessions[sessionId].fbid;
+    if (sender) {
+      utils.sendMessage(sender, { text : 'So we see you are looking for?' });
+    } else {
+      console.log('Invalid Facebook id.');
+    }
+
+    callback(context);
   }
 };
 wit.actions = actions;
