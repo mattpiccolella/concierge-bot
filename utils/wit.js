@@ -1,6 +1,14 @@
 var Wit = require('node-wit').Wit;
 var utils = require('../utils/base.js');
 var constants = require('../config/constants.js');
+var Yelp = require('yelp');
+
+var yelp = new Yelp({
+  consumer_key : constants.YELP_CONS_KEY,
+  consumer_secret : constants.YELP_CONS_SECRET,
+  token : constants.YELP_TOKEN,
+  token_secret : constants.YELP_TOKEN_SECRET
+});
 
 var wit = module.exports = {};
 const sessions = {};
@@ -50,7 +58,10 @@ const actions = {
 
     var sender = sessions[sessionId].fbid;
     if (sender) {
-      utils.sendMessage(sender, { text : 'So we see you are looking for?' });
+      yelp.search({ term : searchTerm, location : locationTerm}).then(function(data) {
+        console.log(data);
+        utils.sendMessage(sender, { text : 'So we see you are looking for?' });
+      })
     } else {
       console.log('Invalid Facebook id.');
     }
